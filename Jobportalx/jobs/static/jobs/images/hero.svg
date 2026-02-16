@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="300" viewBox="0 0 1200 300">
+  <defs>
+    <linearGradient id="g" x1="0" x2="1">
+      <stop offset="0%" stop-color="#1976d2"/>
+      <stop offset="100%" stop-color="#4dabf7"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="300" fill="url(#g)" rx="10"/>
+  <g fill="#fff" font-family="Segoe UI, Arial, sans-serif">
+    <text x="60" y="120" font-size="36" font-weight="700">Welcome to JobPortalX</text>
+    <text x="60" y="170" font-size="18" opacity="0.95">Your dashboard — manage applications, interviews and profile</text>
+  </g>
+</svg>

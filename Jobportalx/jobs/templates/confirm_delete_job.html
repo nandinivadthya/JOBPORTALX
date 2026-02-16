@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Delete Job - JobPortalX</title>
+
+<style>
+    body {
+        margin: 0;
+        font-family: 'Segoe UI', sans-serif;
+        background-color: #f4f6f9;
+    }
+
+    header {
+        background: white;
+        padding: 18px 6%;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+        position: sticky;
+        top: 0;
+        z-index: 10;
+    }
+
+    header h1 {
+        color: #1976d2;
+        margin: 0;
+        font-size: 1.6rem;
+    }
+
+    nav a {
+        margin-left: 18px;
+        color: #1976d2;
+        text-decoration: none;
+        font-weight: 600;
+    }
+
+    nav a:hover {
+        text-decoration: underline;
+    }
+
+    .container {
+        max-width: 600px;
+        margin: 60px auto;
+        padding: 30px;
+        background: white;
+        border-radius: 10px;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+
+    h2 {
+        color: #1976d2;
+        margin-top: 0;
+    }
+
+    .content {
+        margin: 20px 0;
+    }
+
+    .job-info {
+        background: #f9f9f9;
+        padding: 15px;
+        border-radius: 6px;
+        margin: 20px 0;
+        border-left: 4px solid #ff9800;
+    }
+
+    .job-info p {
+        margin: 8px 0;
+    }
+
+    .warning-message {
+        background: #fff3cd;
+        padding: 15px;
+        border-radius: 6px;
+        border-left: 4px solid #ff9800;
+        color: #856404;
+        margin: 20px 0;
+    }
+
+    .button-group {
+        display: flex;
+        gap: 10px;
+        margin-top: 30px;
+    }
+
+    button, a.btn {
+        padding: 12px 30px;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 15px;
+        font-weight: 600;
+        text-decoration: none;
+        display: inline-block;
+        transition: background-color 0.2s;
+        flex: 1;
+        text-align: center;
+    }
+
+    .btn-delete {
+        background: #f44336;
+        color: white;
+    }
+
+    .btn-delete:hover {
+        background: #da190b;
+    }
+
+    .btn-cancel {
+        background: #e0e0e0;
+        color: #333;
+    }
+
+    .btn-cancel:hover {
+        background: #d0d0d0;
+    }
+</style>
+</head>
+
+<body>
+
+<header>
+    <h1>JobPortalX</h1>
+    <nav>
+        <a href="{% url 'home' %}">Home</a>
+        <a href="{% url 'recruiter_dashboard' %}">Dashboard</a>
+        <a href="{% url 'logout' %}">Logout</a>
+    </nav>
+</header>
+
+<div class="container">
+    <h2>⚠️ Delete Job Posting</h2>
+
+    <div class="content">
+        <p>Are you sure you want to delete this job posting? This action cannot be undone.</p>
+        
+        <div class="job-info">
+            <p><strong>Job Title:</strong> {{ job.title }}</p>
+            <p><strong>Company:</strong> {{ job.company }}</p>
+            <p><strong>Location:</strong> {{ job.location }}</p>
+            <p><strong>Applications Received:</strong> {{ job.applications.count }}</p>
+        </div>
+
+        <div class="warning-message">
+            <p><strong>⚠️ Warning:</strong> All applications related to this job will also be deleted. {{ job.applications.count }} applicant(s) are currently interested in this position.</p>
+        </div>
+
+        <form method="post" style="display: inline;">
+            {% csrf_token %}
+            <div class="button-group">
+                <a href="{% url 'recruiter_dashboard' %}" class="btn-cancel">Keep This Job</a>
+                <button type="submit" class="btn-delete">Yes, Delete Jobs</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+</body>
+</html>

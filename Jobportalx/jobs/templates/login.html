@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login - JobPortalX</title>
+
+  <style>
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Tahoma, sans-serif;
+      background: #f9fbfd;
+      color: #333;
+    }
+
+    /* ===== HEADER ===== */
+    header {
+      background: #ffffff;
+      padding: 15px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+
+    header h1 {
+      color: #0077cc;
+      margin: 0;
+    }
+
+    nav a {
+      margin: 0 15px;
+      text-decoration: none;
+      color: #333;
+      font-weight: 500;
+    }
+
+    nav a:hover {
+      color: #0077cc;
+    }
+
+    /* ===== FORM ===== */
+    form {
+      max-width: 400px;
+      margin: 80px auto;
+      padding: 30px;
+      background: #ffffff;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+
+    form h2 {
+      text-align: center;
+      margin-bottom: 20px;
+      color: #0077cc;
+    }
+
+    form input,
+    form button {
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 14px;
+    }
+
+    form button {
+      background: #0077cc;
+      color: white;
+      border: none;
+      cursor: pointer;
+      font-size: 15px;
+      font-weight: 600;
+    }
+
+    form button:hover {
+      background: #005fa3;
+    }
+
+    /* ===== FOOTER ===== */
+    footer {
+      background: #004c99;
+      color: white;
+      text-align: center;
+      padding: 20px;
+      margin-top: 40px;
+    }
+  </style>
+
+</head>
+<body>
+
+{% load static %}
+<header>
+  <h1>JobPortalX</h1>
+  <nav>
+    <a href="{% url 'home' %}">Home</a>
+    <a href="{% url 'employee_dashboard' %}">Profile</a>
+    <a href="{% url 'login' %}">Login</a>
+    <a href="{% url 'register' %}">Register</a>
+  </nav>
+</header>
+
+<form method="post" action="{% url 'login' %}">
+  {% csrf_token %}
+  <h2>Login</h2>
+
+  {% if messages %}
+    {% for message in messages %}
+      <div style="padding: 12px; margin-bottom: 15px; background: {% if message.tags %}{% if 'error' in message.tags %}#f8d7da{% else %}#d4edda{% endif %}{% else %}#d4edda{% endif %}; color: {% if message.tags %}{% if 'error' in message.tags %}#721c24{% else %}#155724{% endif %}{% else %}#155724{% endif %}; border: 1px solid {% if message.tags %}{% if 'error' in message.tags %}#f5c6cb{% else %}#c3e6cb{% endif %}{% else %}#c3e6cb{% endif %}; border-radius: 6px; font-size: 14px; font-weight: 600;">
+        {{ message }}
+      </div>
+    {% endfor %}
+  {% endif %}
+
+  <input name="email" type="email" placeholder="Enter Email" required>
+  <input name="password" type="password" placeholder="Enter Password" required>
+  <button type="submit">Login</button>
+</form>
+
+<footer>
+  <p>© 2025 JobPortalX | All Rights Reserved</p>
+</footer>
+
+</body>
+</html>
