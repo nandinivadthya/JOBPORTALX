@@ -1,0 +1,13 @@
+Url: http://127.0.0.1:8000/media/resumes/Nandhini_Resume_1.pdf
+Status: 200
+Headers:
+Date: Mon, 16 Feb 2026 09:29:35 GMT
+Server: WSGIServer/0.2 CPython/3.11.9
+Content-Type: application/pdf
+Content-Length: 2848
+Content-Disposition: inline; filename="Nandhini_Resume_1.pdf"
+Last-Modified: Mon, 16 Feb 2026 06:35:52 GMT
+X-Frame-Options: SAMEORIGIN
+X-Content-Type-Options: nosniff
+Referrer-Policy: same-origin
+Cross-Origin-Opener-Policy: same-origin

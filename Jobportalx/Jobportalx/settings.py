@@ -122,5 +122,8 @@ LOGIN_URL = 'login'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 # Media files (User uploads)
-MEDIA_URL = 'media/'
+MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
+
+# Security Settings
+X_FRAME_OPTIONS = 'SAMEORIGIN'

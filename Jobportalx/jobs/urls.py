@@ -13,6 +13,7 @@ from .views import (
     view_applicants,
     update_application_status,
     view_application_details,
+    serve_resume,
 )
 
 urlpatterns = [
@@ -29,4 +30,5 @@ urlpatterns = [
     path('view/applicants/<int:job_id>/', view_applicants, name='view_applicants'),
     path('update/application/<int:application_id>/<str:status>/', update_application_status, name='update_application_status'),
     path('view/application/<int:application_id>/', view_application_details, name='view_application_details'),
+    path('application/<int:application_id>/resume/', serve_resume, name='serve_resume'),
 ]

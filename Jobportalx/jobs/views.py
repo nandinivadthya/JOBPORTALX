@@ -6,6 +6,7 @@ from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError
 from .models import Job, Application
 from .forms import JobForm, ApplicationForm
+from .utils import extract_text_from_pdf, calculate_resume_score
 
 
 def home(request):
@@ -75,6 +76,15 @@ def login_view(request):
         if user is not None:
             login(request, user)
             messages.success(request, f"Welcome back, {user.get_full_name() or user.username}! 👋")
+            
+            # Check for new accepted applications to notify job seeker
+            if not user.is_staff:
+                new_acceptances = Application.objects.filter(user=user, status='accepted', notified=False)
+                for app in new_acceptances:
+                    messages.success(request, f"Your application for {app.job.title} at {app.job.company} has been accepted! 🎊")
+                    app.notified = True
+                    app.save()
+                    
             if user.is_staff:
                 return redirect("recruiter_dashboard")
             else:
@@ -245,4 +255,57 @@ def view_application_details(request, application_id):
         messages.error(request, "You don't have access to this application.")
         return redirect("home")
     
-    return render(request, "view_application_details.html", {"application": application})
+    
+    resume_score = None
+    if application.resume:
+        try:
+            resume_path = application.resume.path
+            resume_text = extract_text_from_pdf(resume_path)
+            job_description = application.job.description
+            score_data = calculate_resume_score(resume_text, job_description)
+            resume_score = score_data['score']
+            matched_keywords = score_data['matched_keywords']
+        except Exception as e:
+            print(f"Error calculating resume score: {e}")
+            
+    return render(request, "view_application_details.html", {
+        "application": application, 
+        "resume_score": resume_score,
+        "matched_keywords": matched_keywords
+    })
+
+
+from django.http import FileResponse, Http404
+import os
+
+@login_required
+def serve_resume(request, application_id):
+    application = get_object_or_404(Application, id=application_id)
+    
+    # Permission check
+    if application.job.recruiter != request.user and application.user != request.user:
+        messages.error(request, "You don't have access to this application.")
+        return redirect("home")
+    
+    if not application.resume:
+        raise Http404("Resume not found")
+        
+    try:
+        # Open the file
+        file_path = application.resume.path
+        response = FileResponse(open(file_path, 'rb'), content_type='application/pdf')
+        
+        # Set headers to allow embedding
+        # We explicitly remove restrictive headers or set them to allow embedding
+        response['X-Frame-Options'] = 'SAMEORIGIN' # Or remove it entirely if SAMEORIGIN is still problematic, but SAMEORIGIN should work. 
+        # Actually, let's remove it to be safe if the middleware is adding it.
+        # But middleware adds it at the end. We might need to use @xframe_options_exempt decorator if middleware is strict.
+        
+        # Let's try setting it to SAMEORIGIN first, as that is what we want. 
+        # But wait, middleware *already* sets it to SAMEORIGIN. The issue might be COOP.
+        
+        response['Content-Disposition'] = 'inline; filename="{}"'.format(os.path.basename(file_path))
+        response['Cross-Origin-Opener-Policy'] = 'unsafe-none' # Relax this
+        return response
+    except FileNotFoundError:
+        raise Http404("Resume file missing on server")
